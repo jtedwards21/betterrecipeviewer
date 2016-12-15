@@ -1,87 +1,85 @@
 
 
+var MockRecipes = [{id:0, name:'dog'},{id:1, name:'dog'},{id:2, name:'dog'}]
 
 
 
-var Box = React.createClass({
+
+
+var Menu = React.createClass({
 　　getInitialState(){
-	return{recipeName: "", ingredients: [{id:0, name:""}]}
+	return{recipeName: "", ingredients: [{id:0, name:""}], recipes: this.props.recipes, currentRecipe: {}, display: false}
   },
-  handleNameChange(e){
-    this.setState({recipeName:  e.target.value})
+  toggle(){
+    this.props.toggle();
   },
-  addRecipe(){
-
-  },
-  addIngredient(){
-    var ingredients = this.state.ingredients.slice();
-    var n = ingredients.length;
-    ingredients.push({id:n, name:""})
-    this.setState({ingredients: ingredients})
+  deleteRecipe(i){
+    console.log(i);
   },
   render() {
-
+    var recipes = this.state.recipes.slice();
     var that = this;
 
-    var ingredients = this.state.ingredients.map(function(item, i){
-      
-       var handleChange = function(e){
-	console.log(that.state.ingredients[i]);
-　　　　　　　　　var ingredients = that.state.ingredients;
-         ingredients[i].name = e.target.value;
-         that.setState({ingredients: ingredients});
-       };
-      
-       return <Ingredient key={item.id} id={item.id} value={item.name} handleChange={handleChange} />
-     })
+    recipes = recipes.map(function(r,i){
+       var handleView = function(){
+	 var recipes = that.state.recipes;
+	 that.setState({currentRecipe: recipes[i], display: true})
+       }
+　　　　　　　var handleDelete = function(){
+	 that.deleteRecipe(i)
+       }
 
+      return <Recipe handleView={handleView} handleDelete={handleDelete} id={r.id} name={r.name} ingredients={'Hi'}/>
+    })  
 
     return(
       <div className="row">
         <div className="col-md-6 col-md-offset-3">
-          <form className="form-horizontal">
-	      <div className="form-group">
-		<label className="col-md-2">Name</label>
-	        <div className="col-md-10">
-	          <input id="recipe-name" value={this.state.recipeName} onChange={this.handleNameChange} className="form-control" placeholder="Name" type="text"/>
-	        </div>
+	　　<div className="well well-lg">
+      　　    <div　className="menu">
+	      <table className="table">
+	        <thead></thead>
+	        <tbody>
+                  {recipes}
+	        </tbody>
+	      </table>
+	      <div className="btn btn-large btn-default" onClick={this.toggle}>
+	        Add a Recipe
 	      </div>
-	      <div className="form-group">
-		<div className="col-md-2 col-md-offset-4">
-	          <div className="btn btn-default" onClick={this.addRecipe}>Add</div>
-		</div>
-                {ingredients}
-		<div className="col-md-2">
-                  <div className="btn btn-default" onClick={this.addIngredient}>Add Ingredient</div>
-		</div>
-	      </div>
-	    </form>
+	    </div>
+	　　</div>
 	</div>
       </div>
     )
   }
 })
 
-
-
-
-
-
-var Ingredient = React.createClass({
-  render() {
+var Recipe = React.createClass({
+  getInitialState(){
+    return {}
+  },
+  render(){
     return (
-	<div className="form-group">
-	  <label　className="col-md-2">Ingredient {this.props.id}</label>
-	  <div className="col-md-10">
-	    <input id="recipe-name" value={this.props.childValue} onChange={this.props.handleChange} className="form-control" placeholder="Ingredient" type="text" />
-	  </div>
-	</div>
+      <tr>
+	<th>{this.props.id}</th>
+	<td>{this.props.name}</td>
+        <td><span className="view-button"onClick={this.props.handleView} >u</span></td>
+	<td><span className="delete-button" onClick={this.props.handleDelete} >x</span></td>
+	<td>{this.props.ingredients}</td>
+      </tr>
     );
   }
 })
 
 
+
+
+
+
+
+
+
 ReactDOM.render(
-  <Box />,
+  <Menu recipes={MockRecipes} />,
   document.getElementById('container')
 )
