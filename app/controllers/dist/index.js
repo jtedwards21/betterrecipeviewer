@@ -1,4 +1,4 @@
-var MockRecipe = {name: 'dog', id: 0, ingredients: [{name:'dog',　id:0}]};
+var MockRecipe = {name: 'dog', id: 0, ingredients: [{name:'cat', id:0},{name:'d', id:1}]};
 
 var EditRecipe = React.createClass({
 　　getInitialState(){
@@ -21,8 +21,9 @@ var EditRecipe = React.createClass({
   render() {
 
     var that = this;
-
-    var ingredients = this.state.recipe.ingredients.map(function(item, i){
+    var ingredients = this.state.recipe.ingredients
+    console.log(ingredients)
+    ingredients = ingredients.map(function(item, i){
       
        var handleChange = function(e){
          var recipe = that.state.recipe;
@@ -82,7 +83,7 @@ var Ingredient = React.createClass({
 	<div className="form-group">
 	  <label　className="col-md-3">Ingredient {this.props.id　+ 1}</label>
 	  <div className="col-md-9">
-	    <input id="recipe-name" value={this.props.childValue} onChange={this.props.handleChange} className="form-control" placeholder="Ingredient" type="text" />
+	    <input id="recipe-name" value={this.props.value} onChange={this.props.handleChange} className="form-control" placeholder="Ingredient" type="text" />
 	  </div>
 	</div>
     );
