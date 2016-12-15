@@ -7,9 +7,11 @@ var MockRecipes = [{id:0, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l",
 
 var Controller = React.createClass({
 　　getInitialState(){
-	return{recipes:　this.props.recipes, view: "menu"}
+	return{recipes:　this.props.recipes, view: "menu", viewedRecipe: {}}
   },
   changeView(view, recipe){
+    if(view == "view"){this.setState({viewedRecipe:recipe, view:"view"})}
+    if(view == "menu"){this.setState({viewedRecipe:{}, view:"menu"})}
     console.log(view);
   },
   render(){
@@ -17,6 +19,7 @@ var Controller = React.createClass({
 
     if(this.state.view == "menu"){ current = <Menu recipes={this.state.recipes} changeView={this.changeView} />}
 
+    if(this.state.view == "view"){current = <Viewer recipe={this.state.viewedRecipe} changeView={this.changeView} />}
     return(<div className="row"><div className="col-md-6 col-md-offset-3"><div className="well well-lg">{current}</div></div></div>)
   }
 })
@@ -102,6 +105,67 @@ var Recipe = React.createClass({
     );
   }
 })
+
+
+
+
+
+var Viewer = React.createClass({
+　　getInitialState(){
+	return{recipe: this.props.recipe}
+  },
+  editRecipe(){
+    var recipe = this.state.recipe;
+    this.props.changeView("edit", recipe)
+  },
+  returnToMenu(){
+    var recipe = this.state.recipe;
+    this.props.changeView("menu", recipe)
+  },
+  render() {
+    console.log('l');
+    console.log(this.state.recipe);
+    var ingredients = this.state.recipe.ingredients.slice();
+    ingredients = ingredients.map(function(item){
+	return <ShowIngredient key={item.id} id={item.id} value={item.name} />
+    })
+    
+    return(
+	　　　　<div className="viewer text-center">
+              <div className="dis-cont">
+	      <div className="display-header">
+	      </div>
+	      </div>
+              <div className="panel panel-primary">
+                <div className="panel-heading">
+                  <h3 className="panel-title">{this.state.recipe.name}</h3>
+                </div>
+                <div className="panel-body">
+                  {ingredients}
+	          <div onClick={this.editRecipe} className="btn btn-primary">Edit</div>
+		  <div onClick={this.returnToMenu} className="btn btn-default">Return</div>
+                </div>
+              </div>
+	    </div>
+    )
+  }
+})
+
+
+
+var ShowIngredient = React.createClass({
+  render() {
+    return (
+	<div　className="show-ingredient">
+	  <label　className="title col-md-6">Ingredient {this.props.id}</label>
+	  <div className="col-md-6">
+	    {this.props.value}
+	  </div>
+	</div>
+    );
+  }
+})
+
 
 
 
