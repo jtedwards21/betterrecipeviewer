@@ -1,43 +1,34 @@
+var MockRecipe = {name: 'dog', id: 0, ingredients: [{name:'cat', id:0},{name:'d', id:1}]};
 
-
-
-
-
-
-
-
-
-
-var AddRecipe = React.createClass({
+var EditRecipe = React.createClass({
 　　getInitialState(){
-	return {recipeName: "", ingredients: [{id:0, name:""}]}
+	return{recipe: this.props.recipe}
   },
   handleNameChange(e){
-    this.setState({recipeName:  e.target.value})
-  },
-  addRecipe(){
-    var recipe = {}
-    recipe.name = this.state.recipeName;
-    recipe.ingredients = this.state.ingredients;
-    console.log(recipe);
+    var recipe = this.state.recipe;
+    recipe.name = e.target.value;
+    this.setState({recipe:  recipe})
   },
   addIngredient(){
-    var ingredients = this.state.ingredients.slice();
-    var n = ingredients.length;
-    ingredients.push({id:n, name:""})
-    this.setState({ingredients: ingredients})
+    var recipe = this.state.recipe;
+    var n = recipe.ingredients.length;
+    recipe.ingredients.push({id:n, name:""})
+    this.setState({recipe: recipe})
+  },
+  saveRecipe(){
+
   },
   render() {
 
     var that = this;
-
-    var ingredients = this.state.ingredients.map(function(item, i){
+    var ingredients = this.state.recipe.ingredients
+    console.log(ingredients)
+    ingredients = ingredients.map(function(item, i){
       
        var handleChange = function(e){
-	console.log(that.state.ingredients[i]);
-　　　　　　　　　var ingredients = that.state.ingredients;
-         ingredients[i].name = e.target.value;
-         that.setState({ingredients: ingredients});
+         var recipe = that.state.recipe;
+         recipe.ingredients[i].name = e.target.value;
+         that.setState({recipe: recipe});
        };
       
        return <Ingredient key={item.id} id={item.id} value={item.name} handleChange={handleChange} />
@@ -52,23 +43,23 @@ var AddRecipe = React.createClass({
 	      
 　　　　　　　　　　　　　　<div className="panel panel-primary">
                   <div className="panel-heading">
-                    <h3 className="panel-title text-center">Add Recipe</h3>
+                    <h3 className="panel-title text-center">Edit Recipe</h3>
                   </div>
                   <div className="panel-body">
 		    <div className="form-group">
 		      <label className="col-md-3">Name</label>
 	              <div className="col-md-9">
-	                <input id="recipe-name" value={this.state.recipeName} onChange={this.handleNameChange} className="form-control" placeholder="Name" type="text"/>
+	                <input id="recipe-name" value={this.state.recipe.name} onChange={this.handleNameChange} className="form-control" placeholder="Name" type="text"/>
 	              </div>
 	            </div>
                     {ingredients}
 		    <div className="form-group">
 		      <div className="col-md-2 col-md-offset-4">
-	                <div className="btn btn-primary" onClick={this.addRecipe}>Add</div>
+	                <div className="btn btn-primary" onClick={this.saveRecipe}>Save</div>
 		      </div>
 		      <div className="col-md-2">
                         <div className="btn btn-default" onClick={this.addIngredient}>Add Ingredient</div>
-		     </div>
+		      </div>
 	            </div>
                   </div>
                　</div>
@@ -90,7 +81,7 @@ var Ingredient = React.createClass({
   render() {
     return (
 	<div className="form-group">
-	  <label　className="col-md-3">Ingredient {this.props.id + 1}</label>
+	  <label　className="col-md-3">Ingredient {this.props.id　+ 1}</label>
 	  <div className="col-md-9">
 	    <input id="recipe-name" value={this.props.value} onChange={this.props.handleChange} className="form-control" placeholder="Ingredient" type="text" />
 	  </div>
@@ -101,6 +92,6 @@ var Ingredient = React.createClass({
 
 
 ReactDOM.render(
-  <AddRecipe />,
+  <EditRecipe recipe={MockRecipe} />,
   document.getElementById('container')
 )
