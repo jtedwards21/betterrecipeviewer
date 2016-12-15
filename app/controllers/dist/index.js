@@ -23,9 +23,9 @@ var Controller = React.createClass({
   },
   render(){
     var current;
-    if(this.state.view == "edit"){current = <EditRecipe recipe={this.state.viewedRecipe} saveRecipe={this.saveRecipe}/>}
+    if(this.state.view == "edit"){current = <EditRecipe recipe={this.state.viewedRecipe} changeView={this.changeView} saveRecipe={this.saveRecipe}/>}
     if(this.state.view == "menu"){current = <Menu recipes={this.state.recipes} changeView={this.changeView} />}
-    if(this.state.view == "add"){current = <AddRecipe addRecipe={this.addRecipe}/>}
+    if(this.state.view == "add"){current = <AddRecipe addRecipe={this.addRecipe}　changeView={this.changeView} />}
     if(this.state.view == "view"){current = <Viewer recipe={this.state.viewedRecipe} changeView={this.changeView} />}
     return(<div className="row"><div className="col-md-6 col-md-offset-3"><div className="well well-lg">{current}</div></div></div>)
   }
@@ -51,6 +51,9 @@ var EditRecipe = React.createClass({
   saveRecipe(){
     var recipe = this.state.recipe;
 　　　　this.props.saveRecipe(recipe)
+  },
+  returnToMenu(){
+    this.props.changeView("menu", null);
   },
   render() {
 
@@ -85,11 +88,14 @@ var EditRecipe = React.createClass({
 	            </div>
                     {ingredients}
 		    <div className="form-group">
-		      <div className="col-md-2 col-md-offset-4">
+		      <div className="col-md-4 text-center">
 	                <div className="btn btn-primary" onClick={this.saveRecipe}>Save</div>
 		      </div>
-		      <div className="col-md-2">
+		      <div className="col-md-4 text-center">
                         <div className="btn btn-default" onClick={this.addIngredient}>Add Ingredient</div>
+		      </div>
+		      <div className="col-md-4 text-center">
+                        <div className="btn btn-warning" onClick={this.returnToMenu}>Go Back</div>
 		      </div>
 	            </div>
                   </div>
@@ -122,6 +128,9 @@ var AddRecipe = React.createClass({
     var n = ingredients.length;
     ingredients.push({id:n, name:""})
     this.setState({ingredients: ingredients})
+  },
+  returnToMenu(){
+    this.props.changeView("menu", null);
   },
   render() {
 
@@ -156,11 +165,14 @@ var AddRecipe = React.createClass({
 	            </div>
                     {ingredients}
 		    <div className="form-group">
-		      <div className="col-md-2 col-md-offset-4">
+		      <div className="col-md-4 text-center">
 	                <div className="btn btn-primary" onClick={this.addRecipe}>Add</div>
 		      </div>
-		      <div className="col-md-2">
+		      <div className="col-md-4 text-center">
                         <div className="btn btn-default" onClick={this.addIngredient}>Add Ingredient</div>
+		     </div>
+		     <div className="col-md-4 text-center">
+                        <div className="btn btn-warning" onClick={this.returnToMenu}>Go Back</div>
 		     </div>
 	            </div>
                   </div>
@@ -307,8 +319,12 @@ var Viewer = React.createClass({
                 </div>
                 <div className="panel-body">
                   {ingredients}
-	          <div onClick={this.editRecipe} className="btn btn-primary">Edit</div>
-		  <div onClick={this.returnToMenu} className="btn btn-default">Return</div>
+		  <div className="col-md-6 text-center">
+	            <div onClick={this.editRecipe} className="btn btn-primary">Edit</div>
+		  </div>
+		  <div className="col-md-6 text-center">
+		    <div onClick={this.returnToMenu} className="btn btn-default">Return</div>
+		  </div>
                 </div>
               </div>
 	    </div>
