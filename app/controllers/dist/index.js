@@ -1,4 +1,4 @@
-var MockRecipes = [{id:0, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]},{id:0, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]},{id:0, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]}];
+var MockRecipes = [{id:0, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]},{id:1, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]},{id:2, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]}];
 
 
 
@@ -10,10 +10,28 @@ var Controller = React.createClass({
 	return{recipes:　this.props.recipes, view: "menu", viewedRecipe: {}}
   },
   addRecipe(r){
-    console.log(r);
+    var recipes = this.state.recipes.slice();
+    r.id = recipes.length;
+    recipes.push(r);
+    this.setState({recipes:recipes, view: "menu"});
+  },
+  deleteRecipe(i){
+    var recipes = this.state.recipes;
+    var front = recipes.slice(0, i);
+    var back = recipes.slice(i+1);
+    recipes = front.concat(back);
+    console.log(recipes);
+    recipes.map(function(r, i){
+	r.id = i;
+        return r;
+    })
+    this.setState({recipes:recipes, view: "menu"});
   },
   saveRecipe(r){
-    console.log(r);
+    var recipes = this.state.recipes.slice();
+    var n = r.id;
+    recipes[n] = r;
+    this.setState({recipes:recipes, view: "menu"})
   },
   changeView(view, recipe){
     if(view == "view"){this.setState({viewedRecipe:recipe, view:"view"})}
@@ -23,7 +41,7 @@ var Controller = React.createClass({
   },
   render(){
     var current;
-    if(this.state.view == "edit"){current = <EditRecipe recipe={this.state.viewedRecipe} changeView={this.changeView} saveRecipe={this.saveRecipe}/>}
+    if(this.state.view == "edit"){current = <EditRecipe recipe={this.state.viewedRecipe} deleteRecipe={this.deleteRecipe} changeView={this.changeView} saveRecipe={this.saveRecipe}/>}
     if(this.state.view == "menu"){current = <Menu recipes={this.state.recipes} changeView={this.changeView} />}
     if(this.state.view == "add"){current = <AddRecipe addRecipe={this.addRecipe}　changeView={this.changeView} />}
     if(this.state.view == "view"){current = <Viewer recipe={this.state.viewedRecipe} changeView={this.changeView} />}
@@ -54,6 +72,11 @@ var EditRecipe = React.createClass({
   },
   returnToMenu(){
     this.props.changeView("menu", null);
+  },
+  deleteRecipe(){
+    var recipe = this.state.recipe;
+    var i = recipe.id;
+    this.props.deleteRecipe(i);
   },
   render() {
 
@@ -88,14 +111,17 @@ var EditRecipe = React.createClass({
 	            </div>
                     {ingredients}
 		    <div className="form-group">
-		      <div className="col-md-4 text-center">
+		      <div className="col-md-3 text-center">
 	                <div className="btn btn-primary" onClick={this.saveRecipe}>Save</div>
 		      </div>
-		      <div className="col-md-4 text-center">
+		      <div className="col-md-3 text-center">
                         <div className="btn btn-default" onClick={this.addIngredient}>Add Ingredient</div>
 		      </div>
-		      <div className="col-md-4 text-center">
+		      <div className="col-md-3 text-center">
                         <div className="btn btn-warning" onClick={this.returnToMenu}>Go Back</div>
+		      </div>
+		      <div className="col-md-3 text-center">
+                        <div className="btn btn-warning" onClick={this.deleteRecipe}>Delete</div>
 		      </div>
 	            </div>
                   </div>
@@ -209,7 +235,7 @@ var Menu = React.createClass({
 	return{recipes: this.props.recipes}
   },
   deleteRecipe(i){
-    console.log(i);
+    this.props.deleteRecipe(i);
   },
   viewRecipe(i){
     var recipes = this.state.recipes;
@@ -227,17 +253,14 @@ var Menu = React.createClass({
        var handleView = function(){
 	 that.viewRecipe(i);
        }
-　　　　　　　var handleDelete = function(){
-	 that.deleteRecipe(i)
-       }
 
-      return <Recipe handleView={handleView} handleDelete={handleDelete} id={r.id} name={r.name} ingredients={'Hi'}/>
+      return <Recipe handleView={handleView} id={r.id} name={r.name} ingredients={'Hi'}/>
     })  
 
     return(
       
       　　    <div　className="menu">
-	        <div className="panel panel-default">
+	        <div className="panel panel-primary">
                   <div className="panel-heading">
                     <h3 className="panel-title text-center">Recipe Box</h3>
                   </div>
@@ -248,7 +271,6 @@ var Menu = React.createClass({
 		    <th>#</th>
 		    <th>Name</th>
 		    <th>View</th>
-		    <th>Delete</th>
 		  </tr>
 		</thead>
 	        <tbody>
@@ -277,7 +299,6 @@ var Recipe = React.createClass({
 	<th>{this.props.id + 1}</th>
 	<td>{this.props.name}</td>
         <td><div className="btn btn-primary" onClick={this.props.handleView} >View</div></td>
-	<td><div className="btn btn-danger" onClick={this.props.handleDelete} >Delete</div></td>
       </tr>
     );
   }
@@ -338,7 +359,7 @@ var ShowIngredient = React.createClass({
   render() {
     return (
 	<div　className="show-ingredient">
-	  <label　className="title col-md-6">Ingredient {this.props.id}</label>
+	  <label　className="title col-md-6">Ingredient {this.props.id + 1}</label>
 	  <div className="col-md-6">
 	    {this.props.value}
 	  </div>
