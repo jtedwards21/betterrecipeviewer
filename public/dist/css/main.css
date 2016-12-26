@@ -1,3 +1,15 @@
+
+
+#content {
+  padding-top: 50px;
+  background-color: #2F5657;
+  height: 100%;
+  width: 100%;
+}
+
+#container {
+}
+
 .recipe-title {
   font-size: 3em;
 }
