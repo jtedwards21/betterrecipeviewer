@@ -20,7 +20,16 @@
   width: 100%;
 }
 
-#container {
+.panel-title {
+  font-family: Jambo;
+}
+
+.pop-up-title　{
+  font-size: 4em;
+}
+
+#menu-table {
+  margin-top: 20px;
 }
 
 .recipe-title {
@@ -32,6 +41,10 @@
   display: flex;
 }
 
+#add-buttons{
+  margin-bottom: 10px;
+  padding-bottom: 0px;
+}
 
 .footer {
   position: fixed;

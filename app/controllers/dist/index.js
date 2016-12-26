@@ -1,4 +1,4 @@
-var MockRecipes = [{id:0, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]},{id:1, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]},{id:2, name:'dog', ingredients:[{name:"hi", id:3}, {name:"l", id: 5}]}];
+var MockRecipes = [{id:0, name:'dog', ingredients:[{name:"hi", id:0}, {name:"l", id: 1}]},{id:1, name:'dog', ingredients:[{name:"hi", id:0}, {name:"l", id: 0}]},{id:2, name:'dog', ingredients:[{name:"hi", id:0}, {name:"l", id: 1}]}];
 
 
 
@@ -117,7 +117,7 @@ var EditRecipe = React.createClass({
 	      
 　　　　　　　　　　　　　　<div className="panel panel-primary">
                   <div className="panel-heading">
-                    <h3 className="panel-title text-center">Edit Recipe</h3>
+                    <div className="panel-title text-center pop-up-title">Edit Recipe</div>
                   </div>
                   <div className="panel-body">
 		    <div className="form-group">
@@ -127,7 +127,8 @@ var EditRecipe = React.createClass({
 	              </div>
 	            </div>
                     {ingredients}
-		    <div className="form-group">
+		    <hr />
+		    <div>
 		      <div className="col-md-3 text-center">
 	                <div className="btn btn-primary" onClick={this.saveRecipe}>Save</div>
 		      </div>
@@ -197,7 +198,7 @@ var AddRecipe = React.createClass({
 	      
 　　　　　　　　　　　　　　<div className="panel panel-primary">
                   <div className="panel-heading">
-                    <h3 className="panel-title text-center">Add Recipe</h3>
+                    <div className="panel-title text-center pop-up-title">Add Recipe</div>
                   </div>
                   <div className="panel-body">
 		    <div className="form-group">
@@ -207,7 +208,8 @@ var AddRecipe = React.createClass({
 	              </div>
 	            </div>
                     {ingredients}
-		    <div className="form-group">
+		    <hr />
+		    <div id="add-buttons">
 		      <div className="col-md-4 text-center">
 	                <div className="btn btn-primary" onClick={this.addRecipe}>Add</div>
 		      </div>
@@ -279,28 +281,22 @@ var Menu = React.createClass({
       　　    <div　className="menu">
 	        <div className="panel panel-primary">
                   <div className="panel-heading">
-                    <h3 className="panel-title text-center">Recipe Box</h3>
+                    <div className="panel-title text-center">Recipe Box</div>
                   </div>
                   <div className="panel-body">
-                    <table className="table table-hover">
-	        <thead>
-		　　<tr>
-		    <th>#</th>
-		    <th>Name</th>
-		    <th>View</th>
-		  </tr>
-		</thead>
+                    <table id="menu-table" className="table table-striped">
 	        <tbody>
                   {recipes}
 	        </tbody>
 	      </table>
+		<hr />
+	        <div className="text-center">
+	          <div className="btn btn-large btn-default" onClick={this.addRecipe}>Add a Recipe</div>
+	         </div>
                   </div>
                  </div>
 	      
-	      <div className="text-center">
-	        <div className="btn btn-large btn-default" onClick={this.addRecipe}>
-	        Add a Recipe</div>
-	      </div>
+	      
 	    </div>
     )
   }
@@ -313,9 +309,8 @@ var Recipe = React.createClass({
   render(){
     return (
       <tr>
-	<th>{this.props.id + 1}</th>
-	<td>{this.props.name}</td>
-        <td><div className="btn btn-primary" onClick={this.props.handleView} >View</div></td>
+	<td className="text-center"><b>{this.props.name}</b></td>
+        <td className="text-center"><div className="btn btn-primary" onClick={this.props.handleView} >View</div></td>
       </tr>
     );
   }
@@ -353,10 +348,11 @@ var Viewer = React.createClass({
 	      </div>
               <div className="panel panel-primary">
                 <div className="panel-heading">
-                  <h3 className="panel-title">{this.state.recipe.name}</h3>
+                  <div className="panel-title pop-up-title">{this.state.recipe.name}</div>
                 </div>
                 <div className="panel-body">
                   {ingredients}
+		  <hr />
 		  <div className="col-md-6 text-center">
 	            <div onClick={this.editRecipe} className="btn btn-primary">Edit</div>
 		  </div>
