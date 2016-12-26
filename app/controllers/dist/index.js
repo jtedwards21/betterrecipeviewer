@@ -13,7 +13,11 @@ var Controller = React.createClass({
     var recipes = this.state.recipes.slice();
     r.id = recipes.length;
     recipes.push(r);
-    this.setState({recipes:recipes, view: "menu"});
+    var that = this;
+    $("#pop-up").animate({opacity: 0}, "slow", function(){
+      that.setState({recipes:recipes, view: "menu"});
+      $("#pop-up").animate({opacity: 1}, "slow");
+    });
   },
   deleteRecipe(i){
     var recipes = this.state.recipes;
@@ -24,20 +28,33 @@ var Controller = React.createClass({
     recipes.map(function(r, i){
 	r.id = i;
         return r;
-    })
-    this.setState({recipes:recipes, view: "menu"});
+    });
+    var that = this;
+    $("#pop-up").animate({opacity: 0}, "slow", function(){
+      that.setState({recipes:recipes, view: "menu"});
+      $("#pop-up").animate({opacity: 1}, "slow");
+    });
   },
   saveRecipe(r){
     var recipes = this.state.recipes.slice();
     var n = r.id;
     recipes[n] = r;
-    this.setState({recipes:recipes, view: "menu"})
+    var that = this;
+    $("#pop-up").animate({opacity: 0}, "slow", function(){
+      that.setState({recipes:recipes, view: "menu"});
+      $("#pop-up").animate({opacity: 1}, "slow");
+    });
   },
   changeView(view, recipe){
-    if(view == "view"){this.setState({viewedRecipe:recipe, view:"view"})}
-    if(view == "menu"){this.setState({viewedRecipe:{}, view:"menu"})}
-　　　　if(view == "add"){this.setState({viewedRecipe:{},view:"add"})}
-　　　　if(view == "edit"){this.setState({viewedRecipe:recipe, view:"edit"})}
+    var that = this;
+　　　　$("#pop-up").animate({opacity: 0}, "slow", function(){
+	if(view == "view"){that.setState({viewedRecipe:recipe, view:"view"})}
+        else if(view == "menu"){that.setState({viewedRecipe:{}, view:"menu"})}
+　　　　    else if(view == "add"){that.setState({viewedRecipe:{},view:"add"})}
+　　　　    else if(view == "edit"){that.setState({viewedRecipe:recipe, view:"edit"})}
+　　　　    $("#pop-up").animate({opacity: 1}, "slow");
+    });
+    
   },
   render(){
     var current;
@@ -45,7 +62,7 @@ var Controller = React.createClass({
     if(this.state.view == "menu"){current = <Menu recipes={this.state.recipes} changeView={this.changeView} />}
     if(this.state.view == "add"){current = <AddRecipe addRecipe={this.addRecipe}　changeView={this.changeView} />}
     if(this.state.view == "view"){current = <Viewer recipe={this.state.viewedRecipe} changeView={this.changeView} />}
-    return(<div className="row"><div className="col-md-6 col-md-offset-3"><div className="well well-lg">{current}</div></div></div>)
+    return(<div id="pop-up" className="row"><div className="col-md-6 col-md-offset-3">{current}</div></div>)
   }
 })
 
